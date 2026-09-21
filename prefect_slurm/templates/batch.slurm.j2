@@ -1,0 +1,34 @@
+#!/bin/bash{% if modules is defined %} -l{% endif %}
+#SBATCH --partition={{ partition }}
+#SBATCH --nodes={{ num_nodes }}
+{%- if mpiprocs is defined %}
+#SBATCH --ntasks-per-node={{ mpiprocs }}
+{%- endif %}
+{%- if ompthreads is defined %}
+#SBATCH --cpus-per-task={{ ompthreads }}
+{%- endif %}
+{%- if walltime is defined %}
+#SBATCH --time={{ walltime }}
+{%- endif %}
+#SBATCH --output={{ work_dir }}/output.out
+#SBATCH --error={{ work_dir }}/output.err
+#SBATCH --qpu={{ qpu }}
+{%- if modules is defined %}
+{% for module in modules %}
+module load {{ module }}
+{%- endfor %}
+{%- endif %}
+{%- if environments is defined %}
+{% for k, v in environments.items() %}
+export {{ k }}="{{ v }}"
+{%- endfor %}
+{%- endif %}
+cd {{ work_dir }}
+{% if launcher != "single" -%}
+{{ launcher }}{% if mpi_options is defined %} {{ mpi_options | join(' ') }}{% endif %} {{ executable }}
+{%- else -%}
+{{ executable }}
+{%- endif %}
+{%- if arguments is defined -%}
+{{ ' ' ~ arguments | join(' ') }}
+{%- endif -%}

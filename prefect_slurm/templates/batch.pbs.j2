@@ -1,0 +1,39 @@
+#!/bin/sh{% if modules is defined %} -l{% endif %}
+
+#PBS -q {{ queue_name }}
+#PBS -l select={{ num_nodes }}
+{%- if mpiprocs is defined -%}
+:mpiprocs={{ mpiprocs }}
+{%- endif -%}
+{%- if ompthreads is defined -%}
+:ompthreads={{ ompthreads }}
+{%- endif -%}
+{%- if walltime is defined %}
+#PBS -l walltime={{ walltime }}
+{%- endif %}
+#PBS -W group_list={{ project }}
+#PBS -o {{ work_dir }}/output.out
+#PBS -e {{ work_dir }}/output.err
+
+{%- if modules is defined %}
+{% for module in modules %}
+module load {{ module }}
+{%- endfor %}
+{%- endif %}
+
+{%- if environments is defined %}
+{% for k, v in environments.items() %}
+export {{ k }}="{{ v }}"
+{%- endfor %}
+{%- endif %}
+
+cd {{ work_dir }}
+
+{% if launcher != "single" -%}
+{{ launcher }}{% if mpi_options is defined %} {{ mpi_options | join(' ') }}{% endif %} {{ executable }}
+{%- else -%}
+{{ executable }}
+{%- endif %}
+{%- if arguments is defined -%}
+{{ ' ' ~ arguments | join(' ') }}
+{%- endif -%}

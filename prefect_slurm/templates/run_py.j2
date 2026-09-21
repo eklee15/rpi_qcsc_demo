@@ -1,0 +1,9 @@
+import cloudpickle as pickle
+
+with open("{{ source_file }}", "rb") as fp:
+    function, args, kwargs = pickle.load(fp)
+
+result = function(*args, **kwargs)
+
+with open("{{ result_file }}", "wb") as fp:
+    pickle.dump(result, fp)

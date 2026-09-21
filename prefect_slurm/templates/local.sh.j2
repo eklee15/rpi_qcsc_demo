@@ -1,0 +1,24 @@
+#!/bin/sh{% if modules is defined %} -l{% endif %}
+
+{%- if modules is defined %}
+{% for module in modules %}
+module load {{ module }}
+{%- endfor %}
+{%- endif %}
+
+{%- if environments is defined %}
+{% for k, v in environments.items() %}
+export {{ k }}="{{ v }}"
+{%- endfor %}
+{%- endif %}
+
+cd {{ work_dir }}
+
+{% if launcher != "single" -%}
+{{ launcher }}{% if mpi_options is defined %} {{ mpi_options | join(' ') }}{% endif %} {{ executable }}
+{%- else -%}
+{{ executable }}
+{%- endif %}
+{%- if arguments is defined -%}
+{{ ' ' ~ arguments | join(' ') }}
+{%- endif -%}
