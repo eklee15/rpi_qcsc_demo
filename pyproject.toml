@@ -1,0 +1,61 @@
+[build-system]
+requires = ["setuptools>=64"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "prefect-slurm"
+version = "0.1.0"
+description = "Prefect workflow integration for Miyabi supercomputer."
+readme = "README.md"
+requires-python = ">=3.11"
+authors = [
+    { name = "Shweta Salaria", email = "shweta.salaria@ibm.com" }
+]
+maintainers = [
+    { name = "Shweta Salaria", email = "shweta.salaria@ibm.com" }
+]
+dependencies = [
+    "prefect",
+    "cloudpickle",
+]
+
+[project.optional-dependencies]
+dev = [
+    "numpy",
+    "pre-commit>=4.1.0",
+    "pytest>=8.3.4",
+    "pytest-mock==3.14.0",
+    "pytest-asyncio>=0.25.3",
+    "pytest-mypy-plugins>=3.2.0",
+    "pytest-timeout>=2.3.1",
+    "ruff==0.9.6",
+    "mypy==1.15.0",
+]
+
+[tool.setuptools]
+packages = ["prefect_slurm"]
+include-package-data = true
+zip-safe = false
+
+[tool.setuptools.package-data]
+prefect_slurm = ["templates/*.j2"]
+
+[tool.ruff]
+line-length = 120
+target-version = "py312"
+
+[tool.ruff.lint]
+extend-select = ["I", "E", "F", "UP"]
+
+[tool.mypy]
+ignore_missing_imports = true
+follow_imports = "skip"
+python_version = "3.12"
+
+[tool.pytest.ini_options]
+addopts = "--mypy-only-local-stub"
+pythonpath = ["tests"]
+testpaths = ["tests"]
+asyncio_mode = "auto"
+asyncio_default_fixture_loop_scope = "function"
+timeout = 90
