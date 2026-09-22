@@ -15,7 +15,6 @@ int main(int argc, char** argv) {
 
     uint32_t total_count = 0;
     std::vector<uint32_t> data;
-    printf("DEBUG cpp1");
     if (rank == 0) {
         std::ifstream fin("input.bin", std::ios::binary | std::ios::ate);
         total_count = fin.tellg() / sizeof(uint32_t);
