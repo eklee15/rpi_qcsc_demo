@@ -78,7 +78,7 @@ async def main():
     }
     taskrunner_json = {"parameters": input_json, "program_id": "sampler"}
 
-    filename = "/gpfs/u/home/QNTM/QNTMnkle/barn/rpi_qcsc_demo/bit-count/input.json"
+    filename = taskrunner.work_root + "/input.json"
     with open(filename, "w", encoding="utf-8") as primitive_input_file:
         json.dump(taskrunner_json, primitive_input_file, indent=2)
     logger.info("Run task_runner - start")
@@ -87,7 +87,7 @@ async def main():
     logger.info("Run task_runner - end")
 
     # Read output
-    with open('/gpfs/u/home/QNTM/QNTMnkle/barn/rpi_qcsc_demo/bit-count/output.json', 'r') as f:
+    with open(f'{taskrunner.work_root}/output.json', 'r') as f:
         results = ResultDecoder.decode(f.read())
 
     # MPI execution
