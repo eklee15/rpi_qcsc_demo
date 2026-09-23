@@ -45,7 +45,7 @@ async def main():
 
     # 3. Generate the preset pass manager using the target
     pm = generate_preset_pass_manager(
-        optimization_level=3,
+        optimization_level=1,
         backend=backend,
         seed_transpiler=123,
     )
