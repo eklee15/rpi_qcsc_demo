@@ -32,6 +32,24 @@ blp03 is [landing pad](https://docs.cci.rpi.edu/landingpads/) and dcsfen01 is [f
 ## Step 2. Set up Environment
 **Conda Environment**
 
+**Clone the repo to use the scripts in this Demo**
+
+<img src="img/icon-slurm.png" alt="slurm" width="50"/><br>
+```bash
+git clone https://github.com/eklee15/rpi_qcsc_demo.git; cd rpi_qcsc_demo
+```
+**Install Prefect slurm**
+
+<img src="img/icon-slurm.png" alt="slurm" width="50"/><br>
+```bash
+cd rpi_qcsc_demo
+pip install .
+```
+OR
+```bash
+pip install "git+https://github.com/eklee15/rpi_qcsc_demo.git"
+```
+
 <img src="img/icon-slurm.png" alt="slurm" width="50"/><br>
 ```bash
 # Install Conda
@@ -42,17 +60,7 @@ conda env create -f conda_env.yml -n YOUR_ENV_NAME --force
 # Activate conda environment
 conda activate YOUR_ENV_NAME
 ```
-**Clone the repo and install prefect-slurm**
 
-<img src="img/icon-slurm.png" alt="slurm" width="50"/><br>
-```bash
-git clone https://github.com/eklee15/rpi_qcsc_demo.git; cd rpi_qcsc_demo
-pip install .
-```
-OR
-```
-pip install "git+https://github.com/eklee15/rpi_qcsc_demo.git"
-```
 
 **Start prefect**
 
