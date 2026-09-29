@@ -15,7 +15,7 @@ from qiskit_ibm_runtime.decoders.result_decoder import ResultDecoder
 from qiskit_ibm_runtime import QiskitRuntimeService 
 #from qrmi_resource import QRMIResource
 from qiskit_ibm_runtime.fake_provider import FakeBerlin
-
+from prefect_slurm.core import SlurmJobBlock
 
 BITLEN = 10
 
@@ -27,61 +27,70 @@ async def main():
     # Load configurations
     #qrmi = await QRMIResource.load("ibm-quantum-credentials")
     counter = await BitCounter.load("bit-count")
+    transpilation = await SlurmJobBlock.load("transpilation")
     options = await Variable.get("bit-count")
     taskrunner = await TaskRunner.load("bit-count")
     
     # 1. Initialize the IBM Quantum service and get the target backend
     #service = QiskitRuntimeService()
     #backend = service.backend("ibm_kingston")  # Replace with your specific backend
-    backend = FakeBerlin()
-    logger.info("Use fake_provider for transpilation")
+    #backend = FakeBerlin()
+    #logger.info("Use fake_provider for transpilation")
 
     # Create a PUB payload
     #target = await qrmi.get_target()
-    qc_ghz = QuantumCircuit(BITLEN)
-    qc_ghz.h(0)
-    qc_ghz.cx(0, range(1, BITLEN))
-    qc_ghz.measure_active()
+    #qc_ghz = QuantumCircuit(BITLEN)
+    #qc_ghz.h(0)
+    #qc_ghz.cx(0, range(1, BITLEN))
+    #qc_ghz.measure_active()
 
     # 3. Generate the preset pass manager using the target
-    pm = generate_preset_pass_manager(
-        optimization_level=1,
-        backend=backend,
-        seed_transpiler=123,
-    )
+    #pm = generate_preset_pass_manager(
+    #    optimization_level=1,
+    #    backend=backend,
+    #    seed_transpiler=123,
+    #)
     # 4. Compile the circuit into IBM machine code (ISA)
-    isa = pm.run(qc_ghz)
+    #isa = pm.run(qc_ghz)
 
     # Extract shots
-    shots = options.get("shots", 10000) # default to 100000 if not set
+    #shots = options.get("shots", 10000) # default to 100000 if not set
 
     # Create input.json for task_runner
-    coerced_pub = SamplerPub.coerce((isa,), shots=shots)
+    #coerced_pub = SamplerPub.coerce((isa,), shots=shots)
 
     # Generate OpenQASM3 string which can be consumed by IBM Quantum APIs
-    qasm3_str = qasm3.dumps(
-            coerced_pub.circuit,
-            disable_constants=True,
-            allow_aliasing=True,
-            experimental=qasm3.ExperimentalFeatures.SWITCH_CASE_V1,
-    )
+    #qasm3_str = qasm3.dumps(
+    #        coerced_pub.circuit,
+    #        disable_constants=True,
+    #        allow_aliasing=True,
+    #        experimental=qasm3.ExperimentalFeatures.SWITCH_CASE_V1,
+    #)
 
     # Create SamplerV2 input
-    input_json = {
-    "pubs": [
-        (qasm3_str, None, shots)
-    ],
-    "shots": shots,
-    "options": {},
-    "version": 2,
-    "support_qiskit": False,
-    }
-    taskrunner_json = {"parameters": input_json, "program_id": "sampler"}
+    #input_json = {
+    #"pubs": [
+    #    (qasm3_str, None, shots)
+    #],
+    #"shots": shots,
+    #"options": {},
+    #"version": 2,
+    #"support_qiskit": False,
+    #}
+    #taskrunner_json = {"parameters": input_json, "program_id": "sampler"}
 
-    filename = taskrunner.work_root + "/input.json"
-    with open(filename, "w", encoding="utf-8") as primitive_input_file:
-        json.dump(taskrunner_json, primitive_input_file, indent=2)
-    logger.info(f'work_root: {taskrunner.work_root}')
+    #filename = taskrunner.work_root + "/input.json"
+    #with open(filename, "w", encoding="utf-8") as primitive_input_file:
+    #    json.dump(taskrunner_json, primitive_input_file, indent=2)
+    #logger.info(f'work_root: {taskrunner.work_root}')
+    
+    
+    logger.info("Run transpilation - start")
+    # Quantum execution
+    with transpilation.get_executor() as executor:
+        exit_code = await executor.execute_job(**transpilation.get_job_variables())
+    logger.info("Run transpilation - end")
+    
     logger.info("Run task_runner - start")
     # Quantum execution
     result = await taskrunner.run()
