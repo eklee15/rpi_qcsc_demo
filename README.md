@@ -56,20 +56,13 @@ pip install "git+https://github.com/eklee15/rpi_qcsc_demo.git"
 bash ./install_conda.sh
 conda config --add channels conda-forge
 # Create your environment with YOUR_ENV_NAME
+# Check dependencies in `conda_env.yml` for your referece
 conda env create -f conda_env.yml -n YOUR_ENV_NAME --force 
 # Activate conda environment
 conda activate YOUR_ENV_NAME
 ```
 
-
-**Start prefect**
-
-<img src="img/icon-slurm.png" alt="slurm" width="50"/><br>
-```
-prefect server start --background
-```
-
-Check installations:
+**Check installations**:**
 
 <img src="img/icon-slurm.png" alt="slurm" width="50"/><br>
 ```bash
@@ -149,12 +142,13 @@ prefect block ls
 Example output:
 
 ```
-┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━┳━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━┓
-┃ ID                                   ┃ Type        ┃ Name      ┃ Slug                  ┃
-┡━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━╇━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━┩
-│ a578c460-80f1-4ba9-be44-e7280545b977 │ Bit Counter │ bit-count │ bit-counter/bit-count │
-│ 2c80d057-2fb0-4132-9ab1-6799f4669adc │ Task Runner │ bit-count │ task-runner/bit-count │
-└──────────────────────────────────────┴─────────────┴───────────┴───────────────────────┘
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃ ID                                   ┃ Type        ┃ Name          ┃ Slug                    ┃
+┡━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━┩
+│ a578c460-80f1-4ba9-be44-e7280545b977 │ Bit Counter │ bit-count     │ bit-counter/bit-count   │
+│ c97cb9d0-6424-4d67-81a8-bb00125c8d6e │ Slurm Job   │ transpilation │ slurm-job/transpilation │
+│ 2c80d057-2fb0-4132-9ab1-6799f4669adc │ Task Runner │ bit-count     │ task-runner/bit-count   │
+└──────────────────────────────────────┴─────────────┴───────────────┴─────────────────────────┘
 ```
 
 > [!NOTE]
@@ -168,7 +162,7 @@ Example output:
 
 ## Step 4. Create MPI Program
 
-Maske sure you are in your your work directory and compile this mpi program with mpicxx:
+Make sure you are in your your work directory and compile this mpi program with mpicxx:
 
 <img src="img/icon-slurm.png" alt="slurm" width="50"/><br>
 ```bash
@@ -192,7 +186,7 @@ Make sure that MPI is available on all nodes in the cluster.
 Since this program is lightweight, it's fine compiling on the login node.
 
 
-## Step 8. Execute the workflow
+## Step 5. Execute the workflow
 
 Set the sampler options for the IBM Qiskit Runtime API:
 
@@ -232,7 +226,7 @@ python sampler_workflow_qrmi.py
 
 We can also monitor the progress on the Prefect console:
 
-![Get Counts Flow Run](./images/img-prefect-slurm.png)
+![Get Counts Flow Run](./img/img-prefect-slurm.png)
 
 Upon successful completion of the workflow, Prefect will generate the following artifacts:
 
