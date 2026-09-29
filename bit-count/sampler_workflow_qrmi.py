@@ -14,7 +14,7 @@ from get_task_runner import TaskRunner
 from qiskit_ibm_runtime.decoders.result_decoder import ResultDecoder
 from qiskit_ibm_runtime import QiskitRuntimeService 
 #from qrmi_resource import QRMIResource
-from qiskit_ibm_runtime.fake_provider import FakeKingston
+from qiskit_ibm_runtime.fake_provider import FakeBerlin
 
 
 BITLEN = 10
@@ -33,7 +33,7 @@ async def main():
     # 1. Initialize the IBM Quantum service and get the target backend
     #service = QiskitRuntimeService()
     #backend = service.backend("ibm_kingston")  # Replace with your specific backend
-    backend = FakeKingston()
+    backend = FakeBerlin()
     logger.info("Use fake_provider for transpilation")
 
     # Create a PUB payload
@@ -81,6 +81,7 @@ async def main():
     filename = taskrunner.work_root + "/input.json"
     with open(filename, "w", encoding="utf-8") as primitive_input_file:
         json.dump(taskrunner_json, primitive_input_file, indent=2)
+    logger.info(f'work_root: {taskrunner.work_root}')
     logger.info("Run task_runner - start")
     # Quantum execution
     result = await taskrunner.run()
