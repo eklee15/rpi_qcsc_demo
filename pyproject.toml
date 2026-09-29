@@ -5,18 +5,23 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "prefect-slurm"
 version = "0.1.0"
-description = "Prefect workflow integration for Miyabi supercomputer."
+description = "Prefect workflow integration for RPI AiMOS supercomputer."
 readme = "README.md"
 requires-python = ">=3.11"
 authors = [
-    { name = "Shweta Salaria", email = "shweta.salaria@ibm.com" }
+    { name = "Shweta Salaria", email = "shweta.salaria@ibm.com" }, 
+    { name = "Eun Kyung Lee", email = "eunkyung.lee@us.ibm.com" }, 
+    { name = "Hitomi Takahashi", email = "hitomi@jp.ibm.com" }, 
+    { name = "Munetaka Ohtani", email = "ohtanim@jp.ibm.com" }, 
 ]
+
 maintainers = [
-    { name = "Shweta Salaria", email = "shweta.salaria@ibm.com" }
+    { name = "Eun Kyung Lee", email = "eunkyung.lee@us.ibm.com"}
 ]
 dependencies = [
     "prefect",
     "cloudpickle",
+    "qrmi",
 ]
 
 [project.optional-dependencies]

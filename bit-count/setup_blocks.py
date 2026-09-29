@@ -8,21 +8,38 @@ from prefect.variables import Variable
 
 from get_counts_integration import BitCounter
 from get_task_runner import TaskRunner
+from prefect_slurm import SlurmJobBlock
 
-WORK_ROOT = "/shared/rpi_qcsc_demo/bit-count"
+WORK_ROOT = "/gpfs/u/home/QNTM/QNTMnkle/barn/rpi_qcsc_demo/bit-count"
+QPU = "ibm_rensselaer"
+PARTITION = "quantum"
+
+TRANSPILATION_BLOCK_NAME = "transpilation"
+TRANSPILATION_CONFIG = dict(
+    work_root=WORK_ROOT,
+    executable=f"python {WORK_ROOT}/transpilation.py --dir_path {WORK_ROOT} --shots 10000",
+    executor="sbatch",
+    launcher="srun",
+    partition=PARTITION,
+    qpu=QPU,
+    num_nodes=1,
+    mpiprocs=1,
+    ompthreads=1,
+    walltime="00:20:00",
+)
 
 BIT_COUNTER_BLOCK_NAME = "bit-count"
 BIT_COUNTER_CONFIG = dict(
     work_root=WORK_ROOT,
     executable=f"{WORK_ROOT}/get_counts",
     executor="sbatch",
-    launcher="srun",
-    partition="normal",
-    qpu="ibm_kingston",
+    launcher="mpirun",
+    partition=PARTITION,
+    qpu=QPU,
     num_nodes=1,
     mpiprocs=1,
     ompthreads=1,
-    walltime="00:05:00",
+    walltime="00:20:00",
 )
 
 TASK_RUNNER_BLOCK_NAME = "bit-count"
@@ -31,8 +48,8 @@ TASK_RUNNER_CONFIG = dict(
     executable="task_runner",
     executor="sbatch",
     launcher="srun",
-    partition="normal",
-    qpu="ibm_kingston",
+    partition=PARTITION,
+    qpu=QPU,
     num_nodes=1,
     mpiprocs=1,
     walltime="00:20:00",
@@ -43,7 +60,7 @@ TASK_RUNNER_CONFIG = dict(
 BIT_COUNT_VARIABLE_NAME = "bit-count"
 BIT_COUNT_VARIABLE_VALUE = {
     "options": {
-        "shots": 100000,
+        "shots": 1000,
     },
 }
 
@@ -58,6 +75,7 @@ async def save_variable(name: str, value: dict) -> None:
 
 
 async def main() -> None:
+    await save_block(SlurmJobBlock(**TRANSPILATION_CONFIG), TRANSPILATION_BLOCK_NAME)
     await save_block(BitCounter(**BIT_COUNTER_CONFIG), BIT_COUNTER_BLOCK_NAME)
     await save_block(TaskRunner(**TASK_RUNNER_CONFIG), TASK_RUNNER_BLOCK_NAME)
     await save_variable(BIT_COUNT_VARIABLE_NAME, BIT_COUNT_VARIABLE_VALUE)
