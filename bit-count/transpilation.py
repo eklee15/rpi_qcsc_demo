@@ -14,12 +14,18 @@ BITLEN = 10
 async def main():
     parser = argparse.ArgumentParser(description="Process a directory path.")
     parser.add_argument(
-        "--dir_path", 
-        type=str, 
-        required=True, 
+        "--dir_path",
+        type=str,
+        required=True,
         help="Path to the target directory"
     )
-    
+    parser.add_argument(
+        "--shots",
+        type=int,
+        default=10000,
+        help="Number of shots for quantum circuit execution (default: 10000)"
+    )
+
     args = parser.parse_args()
     work_root = Path(args.dir_path)
     #print(f"work_root: {work_root}")
@@ -63,9 +69,8 @@ async def main():
     # 4. Compile the circuit into IBM machine code (ISA)
     isa = pm.run(qc_ghz)
 
-    # Extract shots
-    #shots = options.get("shots", 10000) # default to 100000 if not set
-    shots = 1000
+    # Extract shots from command-line argument
+    shots = args.shots
 
     # Create input.json for task_runner
     coerced_pub = SamplerPub.coerce((isa,), shots=shots)
