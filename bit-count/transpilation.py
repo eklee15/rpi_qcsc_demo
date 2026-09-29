@@ -1,23 +1,36 @@
 import asyncio
 import json, os
+import random
+import argparse
+from pathlib import Path
 from qiskit import QuantumCircuit
 from qiskit.transpiler import generate_preset_pass_manager
 from qiskit.primitives.containers.sampler_pub import SamplerPub
 from qiskit import qasm3
 from qrmi.primitives import QRMIService
 from qrmi.primitives.ibm import  get_target
-#from prefect.variables import Variable
-#from get_task_runner import TaskRunner
-import random
-
 BITLEN = 10
 
 async def main():
+    parser = argparse.ArgumentParser(description="Process a directory path.")
+    parser.add_argument(
+        "--dir_path", 
+        type=str, 
+        required=True, 
+        help="Path to the target directory"
+    )
     
-    # 0. Load necessary Prefect Blocks for initialization
-    #options = await Variable.get("bit-count")
-    #taskrunner = await TaskRunner.load("bit-count")
+    args = parser.parse_args()
+    work_root = Path(args.dir_path)
+    #print(f"work_root: {work_root}")
     
+    # Check if the directory exists
+    #if work_root.is_dir():
+    #    print(f"Valid directory provided: {work_root}")
+    #else:
+    #    print(f"Error: '{work_root}' is not a valid directory.")
+
+
     # 1. Initialize the IBM Quantum service and get the target backend
     #service = QiskitRuntimeService()
     service = QRMIService()
@@ -29,7 +42,7 @@ async def main():
 
     # Randomly select QR
     qrmi = resources[random.randrange(len(resources))]
-    print(qrmi.metadata())
+    #print(qrmi.metadata())
 
     # Generate transpiler target from backend configuration & properties
     target = get_target(qrmi)
@@ -43,7 +56,7 @@ async def main():
 
     # 3. Generate the preset pass manager using the target
     pm = generate_preset_pass_manager(
-        optimization_level=1,
+        optimization_level=3,
         target=target,
         seed_transpiler=123,
     )
@@ -77,8 +90,8 @@ async def main():
     }
     taskrunner_json = {"parameters": input_json, "program_id": "sampler"}
 
-    #filename = taskrunner.work_root + "/input.json"
-    filename = "/gpfs/u/home/QNTM/QNTMnkle/barn/rpi_qcsc_demo/bit-count/input.json"
+    filename = str(work_root) + "/input.json"
+    #filename = "/gpfs/u/home/QNTM/QNTMnkle/barn/rpi_qcsc_demo/bit-count/input.json"
 
     with open(filename, "w", encoding="utf-8") as primitive_input_file:
         json.dump(taskrunner_json, primitive_input_file, indent=2)
