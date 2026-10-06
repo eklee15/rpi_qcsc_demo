@@ -30,7 +30,14 @@ ssh -L 4200:dcsfen01:4200 USER_ID@blp03.ccni.rpi.edu
 blp03 is [landing pad](https://docs.cci.rpi.edu/landingpads/) and dcsfen01 is [front-end node](https://docs.cci.rpi.edu/clusters/DCS_Supercomputer/). Different nodes can be used with your `USER_ID`. Local port forwarding ([port `4200`](https://docs.prefect.io/v3/get-started/install)) is initiated in order to use Prefect GUI. 
 
 ## Step 2. Set up Environment
-**Conda Environment**
+**Clone the repo to use the scripts in this Demo**
+
+<img src="img/icon-slurm.png" alt="slurm" width="50"/><br>
+```bash
+git clone https://github.com/eklee15/rpi_qcsc_demo.git; cd rpi_qcsc_demo
+```
+
+**Create Conda Environment**
 
 <img src="img/icon-slurm.png" alt="slurm" width="50"/><br>
 ```bash
@@ -45,12 +52,6 @@ conda env create -f conda_env.yml -n YOUR_ENV_NAME --force
 conda activate YOUR_ENV_NAME
 ```
 
-**Clone the repo to use the scripts in this Demo**
-
-<img src="img/icon-slurm.png" alt="slurm" width="50"/><br>
-```bash
-git clone https://github.com/eklee15/rpi_qcsc_demo.git; cd rpi_qcsc_demo
-```
 **Install Prefect slurm**
 
 <img src="img/icon-slurm.png" alt="slurm" width="50"/><br>
