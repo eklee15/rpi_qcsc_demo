@@ -45,7 +45,7 @@ install_miniconda() {
 
     # Run installer
     echo "Running Miniconda3 installer..."
-    bash "$installer_path" -b -p "$INSTALL_DIR"
+    bash "$installer_path" -b -u -p "$INSTALL_DIR"
 
     # Clean up
     rm -rf "$temp_dir"
