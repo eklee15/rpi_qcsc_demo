@@ -32,6 +32,19 @@ blp03 is [landing pad](https://docs.cci.rpi.edu/landingpads/) and dcsfen01 is [f
 ## Step 2. Set up Environment
 **Conda Environment**
 
+<img src="img/icon-slurm.png" alt="slurm" width="50"/><br>
+```bash
+# Install Conda
+bash ./install_conda.sh
+# logout and login in order to use conda or use `su` to login 
+conda config --add channels conda-forge
+# Create your environment with YOUR_ENV_NAME
+# Check dependencies in `conda_env.yml` for your referece
+conda env create -f conda_env.yml -n YOUR_ENV_NAME --force 
+# Activate conda environment
+conda activate YOUR_ENV_NAME
+```
+
 **Clone the repo to use the scripts in this Demo**
 
 <img src="img/icon-slurm.png" alt="slurm" width="50"/><br>
@@ -48,18 +61,6 @@ pip install .
 OR
 ```bash
 pip install "git+https://github.com/eklee15/rpi_qcsc_demo.git"
-```
-
-<img src="img/icon-slurm.png" alt="slurm" width="50"/><br>
-```bash
-# Install Conda
-bash ./install_conda.sh
-conda config --add channels conda-forge
-# Create your environment with YOUR_ENV_NAME
-# Check dependencies in `conda_env.yml` for your referece
-conda env create -f conda_env.yml -n YOUR_ENV_NAME --force 
-# Activate conda environment
-conda activate YOUR_ENV_NAME
 ```
 
 **Check installations**:**
